@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { SearchPageRoutingModule } from './search-routing.module';
 
 import { SearchPage } from './search.page';
-import { ComponentsModule } from "../../../components/components.module";
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
@@ -16,7 +16,7 @@ import { ComponentsModule } from "../../../components/components.module";
     IonicModule,
     SearchPageRoutingModule,
     ComponentsModule
-],
+  ],
   declarations: [SearchPage]
 })
 export class SearchPageModule {}

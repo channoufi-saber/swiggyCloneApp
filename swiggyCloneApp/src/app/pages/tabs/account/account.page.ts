@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { CartService } from 'src/app/services/cart/cart.service';
+import { OrderService } from 'src/app/services/order/order.service';
 
 @Component({
   selector: 'app-account',
@@ -6,76 +9,71 @@ import { Component, OnInit } from '@angular/core';
   standalone: false,
   styleUrls: ['./account.page.scss'],
 })
-export class AccountPage implements OnInit {
+export class AccountPage implements OnInit, OnDestroy {
 
-  profile:any={}
-  isLoading:boolean;
-  orders=[];
-  constructor() { }
+  profile: any = {};
+  isLoading: boolean;
+  orders: any[] = [];
+  ordersSub: Subscription;
+
+  constructor(
+    private orderService: OrderService,
+    private cartService: CartService
+    ) { }
 
   ngOnInit() {
-    this.getData()
+    this.ordersSub = this.orderService.orders.subscribe(order => {
+      console.log('order data: ', order);
+      if(order instanceof Array) {
+        this.orders = order;
+      } else {
+        if(order?.delete) {
+          this.orders = this.orders.filter(x => x.id != order.id);
+        } else if(order?.update) {
+          const index = this.orders.findIndex(x => x.id == order.id);
+          this.orders[index] = order;
+        } else {
+          this.orders = this.orders.concat(order);
+        }
+      }
+    }, e => {
+      console.log(e);
+    });
+    this.getData();
   }
 
-  getData(){
-    this.isLoading=true
-    setTimeout(()=>{
-      this.profile={
-        name:'Channoufi Saber',
-        phone:'92720256',
-        email:'channoufisaber@gmail.com'
+  async getData() {
+    this.isLoading = true;
+    setTimeout(async() => {
+      this.profile = {
+        name: 'Nikhil Agarwal',
+        phone: '9109109100',
+        email: 'technyks@gmail.com'
       };
-        this.orders = [      
-        {
-          address: {address: "Indira Nagar Rd, Borsojai, Basistha 781029, India", house: "dsgd", id: "cLQdnS8YXk5HTDfM3UQC", landmark: "fdgs", lat: 26.108991978867923, lng: 91.79069981213378, title: "yui", user_id: "UA5JWxgjDOYgfXe92H0pFHwulTz2" }, 
-          deliveryCharge: 20,
-          grandTotal: "540.00",
-          id: "5aG0RsPuze8NX00B7uRP",
-          order: [
-            {category_id: "e10", cover: "assets/imgs/baha.jpg", desc: "Great in taste", id: "i32", name: "Bahamas", price: 270, quantity: 1, rating: 0, status: true, uid: "r5", variation: false, veg: false},
-            {category_id: "e10", cover: "assets/imgs/mofo.jpg", desc: "Great in taste", id: "i33", name: "Mofongo", price: 250, quantity: 1, rating: 0, status: true, uid: "r5",variation: false, veg: true}
-          ],
-          paid: "COD",  
-          restaurant: {address: "Christan Basti, India",  city: "909090567", closeTime: "21:00", cover: "", cuisines: ["Caribbean food", "North Indian", "Vietnamese"], delivery_time: 25, description: "dd", email: "DosaPlaza@gmail.com", latitude: 26.1286243, longitude: 91.8012675, id: "r5", isClose: true, name: "DosaPlaza", openTime: "07:00", phone: 6619563867, price: 27, rating: 4.7, short_name: "stayfit", status: "open", totalRating: 13},
-          restaurant_id: "r5",  
-          status: "created",
-          time: "Jul 6, 2020 11:44 AM",
-          total: "520.00",
-          user_id: "1"
-        },
-        {
-          address: {address: "Indira Nagar Rd, Borsojai, Basistha 781029, India", house: "dsgd", id: "cLQdnS8YXk5HTDfM3UQC", landmark: "fdgs", lat: 26.108991978867923, lng: 91.79069981213378, title: "yui", user_id: "UA5JWxgjDOYgfXe92H0pFHwulTz2" }, 
-          deliveryCharge: 20,
-          grandTotal: "440.00",
-          id: "5aG0RsPuze8NX00B7uR1",
-          order: [
-            {category_id: "e00", cover: "assets/imgs/pizza.jpg", desc: "Great in taste", id: "i1", name: "Pizza", price: 120, quantity: 1, rating: 0, status: true, uid: "r1", variation: false, veg: false},
-            {category_id: "e00", cover: "assets/imgs/pasta.jpg", desc: "Great in taste", id: "i3", name: "Pasta", price: 150, quantity: 2, rating: 0, status: true, uid: "r1", variation: false, veg: false}
-          ],
-          paid: "COD",  
-          restaurant: {address: "Beltola Tiniali, India", city: "909090271", closeTime: "20:00", cover: "assets/imgs/restaurant-1.jpg", cuisines: ["Italian", "Mexican"], delivery_time: 25, description: "dd", email: "stay@fit.com", id: "r1", isClose: true, latitude: 26.1286243, longitude: 91.8012675, name: "Stayfit", openTime: "08:00", phone: 6786745745, price: 25, rating: 0, short_name: "stayfit", status: "open", totalRating: 0},    restaurant_id: "r1",  
-          status: "Delivered",
-          time: "Jul 7, 2020 11:44 AM",
-          total: "420.00",
-          user_id: "1"
-        },
-      ];
-      this.isLoading=false
-    },1500)
+      await this.orderService.getOrders();
+      this.isLoading = false;
+    }, 3000);
   }
 
+  logout() {}
 
-  logout(){
-    
-  }
-
-   reorder(order) {
+  async reorder(order) {
     console.log(order);
-    
+    let data: any = await this.cartService.getCart();
+    console.log('data: ', data);
+    if(data?.value) {
+      this.cartService.alertClearCart(null, null, null, order);
+    } else {
+      this.cartService.orderToCart(order);
+    }
   }
 
   getHelp(order) {
     console.log(order);
+  }
+
+  ngOnDestroy() {
+    if(this.ordersSub) this.ordersSub.unsubscribe();
   }
 
 }

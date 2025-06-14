@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-cart-item',
   templateUrl: './cart-item.component.html',
-    standalone: false,
+  standalone: false,
   styleUrls: ['./cart-item.component.scss'],
 })
-export class CartItemComponent  implements OnInit {
+export class CartItemComponent implements OnInit {
 
   @Input() item: any;
   @Input() index: any;

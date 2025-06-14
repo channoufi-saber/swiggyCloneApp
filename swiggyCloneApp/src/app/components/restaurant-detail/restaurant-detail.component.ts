@@ -1,20 +1,22 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-restaurant-detail',
   templateUrl: './restaurant-detail.component.html',
-    standalone: false,
+  standalone: false,
   styleUrls: ['./restaurant-detail.component.scss'],
 })
-export class RestaurantDetailComponent  implements OnInit {
+export class RestaurantDetailComponent implements OnInit {
 
-  @Input() data:any;
+  @Input() data: any;
   @Input() isLoading;
+
   constructor() { }
 
   ngOnInit() {}
 
-  getCuisine(cuisine){
-    return cuisine.join(', ')
+  getCuisine(cuisine) {
+    return cuisine.join(', ');
   }
+
 }

@@ -16,6 +16,6 @@ import { OrdersComponent } from 'src/app/components/orders/orders.component';
     IonicModule,
     AccountPageRoutingModule
   ],
-  declarations: [AccountPage,OrdersComponent]
+  declarations: [AccountPage, OrdersComponent]
 })
 export class AccountPageModule {}

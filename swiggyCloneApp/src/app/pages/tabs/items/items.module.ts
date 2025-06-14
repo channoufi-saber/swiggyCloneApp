@@ -18,7 +18,7 @@ import { RestaurantDetailComponent } from 'src/app/components/restaurant-detail/
     IonicModule,
     ItemsPageRoutingModule,
     ComponentsModule
-],
-  declarations: [ItemsPage,ItemComponent,RestaurantDetailComponent]
+  ],
+  declarations: [ItemsPage, ItemComponent, RestaurantDetailComponent]
 })
 export class ItemsPageModule {}

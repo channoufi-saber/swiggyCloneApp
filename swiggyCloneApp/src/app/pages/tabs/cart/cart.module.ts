@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { CartPageRoutingModule } from './cart-routing.module';
 
 import { CartPage } from './cart.page';
-import { ComponentsModule } from "../../../components/components.module";
-import { CartItemComponent } from "../../../components/cart-item/cart-item.component";
+import { CartItemComponent } from 'src/app/components/cart-item/cart-item.component';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
@@ -16,9 +16,8 @@ import { CartItemComponent } from "../../../components/cart-item/cart-item.compo
     FormsModule,
     IonicModule,
     CartPageRoutingModule,
-    ComponentsModule,
-    
-],
-  declarations: [CartPage,CartItemComponent]
+    ComponentsModule
+  ],
+  declarations: [CartPage, CartItemComponent]
 })
 export class CartPageModule {}

@@ -8,12 +8,14 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class RestaurantComponent  implements OnInit {
 
-  @Input() restaurant:any
+  @Input() restaurant: any;
+
   constructor() { }
 
   ngOnInit() {}
 
-  getCuisine(cuisine){
-    return cuisine.join(', ')
+  getCuisine(cuisine) {
+    return cuisine.join(', ');
   }
+
 }

@@ -6,9 +6,10 @@ import { Component, OnInit } from '@angular/core';
   standalone: false,
   styleUrls: ['./loading-restaurant.component.scss'],
 })
-export class LoadingRestaurantComponent  implements OnInit {
+export class LoadingRestaurantComponent implements OnInit {
 
-  dummy=Array(10)
+  dummy = Array(10);
+
   constructor() { }
 
   ngOnInit() {}
