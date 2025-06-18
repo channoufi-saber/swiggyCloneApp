@@ -1,19 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Order } from 'src/app/models/order.model';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { OrderService } from 'src/app/services/order/order.service';
 
 @Component({
+    standalone: false,
   selector: 'app-account',
   templateUrl: './account.page.html',
-  standalone: false,
   styleUrls: ['./account.page.scss'],
 })
 export class AccountPage implements OnInit, OnDestroy {
 
   profile: any = {};
   isLoading: boolean;
-  orders: any[] = [];
+  orders: Order[] = [];
   ordersSub: Subscription;
 
   constructor(
@@ -24,18 +25,19 @@ export class AccountPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.ordersSub = this.orderService.orders.subscribe(order => {
       console.log('order data: ', order);
-      if(order instanceof Array) {
-        this.orders = order;
-      } else {
-        if(order?.delete) {
-          this.orders = this.orders.filter(x => x.id != order.id);
-        } else if(order?.update) {
-          const index = this.orders.findIndex(x => x.id == order.id);
-          this.orders[index] = order;
-        } else {
-          this.orders = this.orders.concat(order);
-        }
-      }
+      this.orders = order;
+      // if(order instanceof Array) {
+      //   this.orders = order;
+      // } else {
+      //   if(order?.delete) {
+      //     this.orders = this.orders.filter(x => x.id != order.id);
+      //   } else if(order?.update) {
+      //     const index = this.orders.findIndex(x => x.id == order.id);
+      //     this.orders[index] = order;
+      //   } else {
+      //     this.orders = this.orders.concat(order);
+      //   }
+      // }
     }, e => {
       console.log(e);
     });
@@ -57,9 +59,9 @@ export class AccountPage implements OnInit, OnDestroy {
 
   logout() {}
 
-  async reorder(order) {
+  async reorder(order: Order) {
     console.log(order);
-    let data: any = await this.cartService.getCart();
+    let data = await this.cartService.getCart();
     console.log('data: ', data);
     if(data?.value) {
       this.cartService.alertClearCart(null, null, null, order);

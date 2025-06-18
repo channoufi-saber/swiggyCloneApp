@@ -5,6 +5,9 @@ import { Subscription } from 'rxjs';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { take } from 'rxjs/operators';
+import { Restaurant } from 'src/app/models/restaurant.model';
+import { Item } from 'src/app/models/item.model';
+import { Category } from 'src/app/models/category.model';
 
 @Component({
   selector: 'app-items',
@@ -15,8 +18,8 @@ import { take } from 'rxjs/operators';
 export class ItemsPage implements OnInit, OnDestroy {
 
   id: any;
-  data: any = {};
-  items: any[] = [];
+  data  = {} as Restaurant;
+  items: Item[] = [];
   veg: boolean = false;
   isLoading: boolean;
   cartData: any = {};
@@ -26,8 +29,8 @@ export class ItemsPage implements OnInit, OnDestroy {
     title: 'No Menu Available'
   };
   // restaurants: any[] = [];
-  categories: any[] = [];
-  allItems: any[] = [];
+  categories: Category[] = [];
+  allItems: Item[] = [];
   cartSub: Subscription;
   // routeSub: Subscription;
 
@@ -89,7 +92,7 @@ export class ItemsPage implements OnInit, OnDestroy {
   async getItems() {
     try {
       this.isLoading = true;
-      this.data = {};
+      this.data = {} as Restaurant;
       this.cartData = {};
       this.storedData = {};
       setTimeout(async() => {
@@ -99,6 +102,9 @@ export class ItemsPage implements OnInit, OnDestroy {
         this.data = data[0];
         this.categories = this.api.categories.filter(x => x.uid === this.id);
         this.allItems = this.api.allItems.filter(x => x.uid === this.id);
+        this.allItems.forEach((element,index)=>{
+          this.allItems[index].quantity=0
+        })
         this.items = [...this.allItems];
         console.log('restaurant: ', this.data);
         await this.cartService.getCartData();
@@ -135,7 +141,7 @@ export class ItemsPage implements OnInit, OnDestroy {
 
   quantityMinus(item) {
     const index = this.allItems.findIndex(x => x.id === item.id);
-    this.cartService.quantityMinus(index);
+    this.cartService.quantityMinus(index,this.allItems);
   }
 
   saveToCart() {
